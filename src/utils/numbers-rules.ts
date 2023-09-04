@@ -2,7 +2,10 @@ export function numberRules(numberAsString: string, aggregator: string[]) {
   const aggregatorLastPosition = aggregator.slice(-1)
   const aggregatorLastIndex = aggregator.length - 1
 
-  const isAggregatorLastPositionNumber = isNaN(Number(aggregatorLastPosition))
+  const isAggregatorLastPositionNumber = !isNaN(Number(aggregatorLastPosition))
+  if (aggregator.length === 0) {
+    return [numberAsString]
+  }
 
   if (isAggregatorLastPositionNumber) {
     aggregator[

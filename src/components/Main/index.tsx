@@ -1,5 +1,6 @@
 import { Divide, Equals, Minus, Plus, PlusMinus, X } from 'phosphor-react'
-import { MouseEvent, MouseEventHandler, useState } from 'react'
+import { MouseEvent, useState } from 'react'
+import { numberRules } from '../../utils/numbers-rules'
 import {
   CalculatorContainer,
   CalculatorEqualIcon,
@@ -11,7 +12,7 @@ import {
   CalculatorResultDisplay,
   MainContainer,
 } from './styles'
-import { numberRules } from '../../utils/numbers-rules'
+import { operatorRules } from '../../utils/operator-rules'
 
 export default function Main() {
   // const [result, setResult] = useState()
@@ -19,7 +20,7 @@ export default function Main() {
 
   function handleClickOnInput(event: MouseEvent<HTMLButtonElement>) {
     const value = event.currentTarget.id
-    const isValueNumber = isNaN(Number(value))
+    const isValueNumber = !isNaN(Number(value))
 
     if (!value) {
       return
@@ -33,45 +34,11 @@ export default function Main() {
     if (isValueNumber) {
       const newAggregator = numberRules(value, aggregator)
       setAggregator(newAggregator)
-      return
     }
 
-    if (['+', '-', '*', '/'].includes(value) && aggregator.length === 0) {
-      alert('Error')
-    }
-
-    if (['+', '-', '*', '/'].includes(value) && aggregator.length > 0) {
-      setAggregator((prev) => [...prev, value])
-      return
-    }
-
-    if (!isNaN(Number(value)) && aggregator.length === 0) {
-      setAggregator([value])
-      return
-    }
-
-    const lastValueOfAggregator = aggregator.slice(-1)[0]
-
-    if (
-      !isNaN(Number(value)) &&
-      aggregator.length > 0 &&
-      ['+', '-', '*', '/'].includes(lastValueOfAggregator)
-    ) {
-      setAggregator((prev) => [...prev, value])
-
-      return
-    }
-
-    if (
-      !isNaN(Number(value)) &&
-      aggregator.length > 0 &&
-      !isNaN(Number(lastValueOfAggregator))
-    ) {
-      const aggregatorWithNumberConcatNumber = [...aggregator]
-      aggregatorWithNumberConcatNumber[
-        aggregatorWithNumberConcatNumber.length - 1
-      ] = `${lastValueOfAggregator}${value}`
-      setAggregator(aggregatorWithNumberConcatNumber)
+    if (['%', '/', '*', '-', '+'].includes(value)) {
+      const newAggregator = operatorRules(value, aggregator)
+      setAggregator(newAggregator)
     }
   }
 
