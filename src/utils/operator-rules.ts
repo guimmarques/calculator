@@ -5,8 +5,6 @@ export function operatorRules(operatorAsString: string, aggregator: string[]) {
     Number(aggregatorLastPosition),
   )
 
-  console.log(aggregatorLastPosition, isAggregatorLastPositionNotANumber)
-
   if (isAggregatorLastPositionNotANumber) {
     alert('Error')
     return aggregator

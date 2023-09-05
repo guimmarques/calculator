@@ -13,47 +13,62 @@ import {
   MainContainer,
 } from './styles'
 import { operatorRules } from '../../utils/operator-rules'
+import { aggregationJoin } from '../../utils/aggregation-join'
+import { calculate } from '../../utils/calculate'
 
 export default function Main() {
-  // const [result, setResult] = useState()
+  const [result, setResult] = useState<number>()
   const [aggregator, setAggregator] = useState<string[]>([])
 
-  function handleClickOnInput(event: MouseEvent<HTMLButtonElement>) {
+  async function handleClickOnInput(event: MouseEvent<HTMLButtonElement>) {
     const value = event.currentTarget.id
     const isValueNumber = !isNaN(Number(value))
+    const aggregatorCopy = [...aggregator]
 
     if (!value) {
       return
     }
 
     if (value === 'CE') {
+      const ceAggregator = [...aggregator]
+      ceAggregator.pop()
+      setAggregator(ceAggregator)
+      return
+    }
+
+    if (value === 'C') {
+      setResult(0)
       setAggregator([])
       return
     }
 
     if (isValueNumber) {
-      const newAggregator = numberRules(value, aggregator)
+      const newAggregator = numberRules(value, aggregatorCopy)
       setAggregator(newAggregator)
     }
 
     if (['%', '/', '*', '-', '+'].includes(value)) {
-      const newAggregator = operatorRules(value, aggregator)
+      const newAggregator = operatorRules(value, aggregatorCopy)
       setAggregator(newAggregator)
     }
-  }
 
-  console.log(aggregator)
+    if (value === '=') {
+      const calculateResult = calculate(aggregatorCopy)
+
+      setResult(calculateResult)
+    }
+  }
 
   return (
     <MainContainer>
       <CalculatorContainer>
         <CalculatorInfo>
           <CalculatorInputDisplay>
-            {aggregator.join('') || '0'}
+            {aggregationJoin(aggregator) || '0'}
           </CalculatorInputDisplay>
           <CalculatorResult>
             <CalculatorEqualIcon />
-            <CalculatorResultDisplay>2</CalculatorResultDisplay>
+            <CalculatorResultDisplay>{result || 0}</CalculatorResultDisplay>
           </CalculatorResult>
         </CalculatorInfo>
         <CalculatorInputsContainer>

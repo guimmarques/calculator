@@ -11,7 +11,6 @@ export function numberRules(numberAsString: string, aggregator: string[]) {
     aggregator[
       aggregatorLastIndex
     ] = `${aggregatorLastPosition}${numberAsString}`
-
     return aggregator
   }
 
